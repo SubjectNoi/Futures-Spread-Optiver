@@ -3,6 +3,7 @@ import re
 import calendar
 import datetime
 import matplotlib.pyplot as plt
+import numpy as np
 data_path = "../../data/dce/2014/"
 import os
 data = {}
@@ -35,7 +36,7 @@ def normalize(input_list):
 
 
 
-def plot_futures(begin, end):
+def plot_futures(begin, end, item_list):
     plot_dict = {}
     for keys in data:
         sorted_data_item = sorted(data[keys], key=lambda x: x[2])
@@ -49,8 +50,9 @@ def plot_futures(begin, end):
         for sub_keys in sub_data:
             sorted_sub_data_item = sorted(sub_data[sub_keys], key=lambda y: float(y[13]))
             plot_item = sorted_sub_data_item[-1]
-            if int(plot_item[2]) >= begin and int(plot_item[2]) <= end:
-                tmp_plot_items.append([plot_item[1], int(plot_item[2]), float(plot_item[13])])
+            ch = plot_item[1][0:len(plot_item[1]) - 4]
+            if int(plot_item[2]) >= begin and int(plot_item[2]) <= end and (ch in item_list or item_list[0] == "all"):
+                tmp_plot_items.append([plot_item[1], int(plot_item[2]), float(plot_item[8])])
     
         plot_dict[keys] = tmp_plot_items
 
@@ -59,13 +61,16 @@ def plot_futures(begin, end):
         x = []
         y = []
         minN, maxN = normalize(plot_dict[keys])
-        for i in plot_dict[keys]:
-            date = datetime.datetime.strptime(str(i[1]), '%Y%m%d')
-            axis = datetime.datetime.strptime("20140101", '%Y%m%d')
-            x.append(date.__sub__(axis).days)
-            y.append((float(i[2]) - minN) / (maxN - minN))
-        plt.plot(x, y)
-
+        if len(plot_dict[keys]) > 0:
+            name = plot_dict[keys][0][0][0:len(plot_dict[keys][0][0]) - 4]
+            # print(name)
+            for i in plot_dict[keys]:
+                date = datetime.datetime.strptime(str(i[1]), '%Y%m%d')
+                axis = datetime.datetime.strptime("20140101", '%Y%m%d')
+                x.append(date.__sub__(axis).days)
+                y.append((float(i[2]) - minN) / (maxN - minN))
+            plt.plot(x, y, label=name)
+    plt.legend()
     plt.show()
 
-plot_futures(20140101,20140201)
+plot_futures(20140101,20150101, ["jm", "j", "i", "pp", "l", "v"])
