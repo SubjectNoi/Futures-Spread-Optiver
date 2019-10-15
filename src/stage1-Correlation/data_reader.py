@@ -78,8 +78,11 @@ def plot_futures(begin, end, item_list):
                 y.append((float(i[2]) - minN) / (maxN - minN))
             # plt.plot(x, y, label=name, linewidth=1)
             plt.scatter(x, y, label=name, marker="+", s=15)
+            # fproceed = open("../../data/proceed/jm.txt", "w+")
+            # for i in range(len(x)):
+            #     fproceed.write("%d, %f\n" % (x[i], y[i]))
     plt.legend()
     plt.show()
 
-plot_futures(20140101, 20170101, ["y", "v"])
+plot_futures(20140101, 20170101, ["jm"])
 # [j, jm, v, i], [l, pp], [c, cs], [v, y], [jd, m], [a], [b], [bb], [fb] ? [i, p]
