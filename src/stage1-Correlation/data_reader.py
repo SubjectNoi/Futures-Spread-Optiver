@@ -7,7 +7,7 @@ import numpy as np
 data_path = "../../data/dce/2014/"
 import os
 data = {}
-def file_reader(file_dir):
+def file_reader(file_dir, year):
     for root, dirs, files in os.walk(file_dir):
         for file_name in files:
             f = open(data_path + str(file_name), encoding='utf-8', errors='ignore')
@@ -16,15 +16,24 @@ def file_reader(file_dir):
                 item = re.split(r",|\n", items)
                 item_float = []
                 for tmp in item:
-                    item_float.append(str(tmp)[1:len(tmp)-1])
-                    # item_float.append(str(tmp))
-                goodType = item[1][1:(len(item[1]) - 5)]
+                    if year == 2015:
+                        item_float.append(str(tmp))
+                    else:
+                        item_float.append((str(tmp)[1:len(tmp)-1]).strip())
+                if year == 2015:
+                    goodType = item[1][0:len(item[1]) - 4]
+                else:
+                    goodType = item[1][1:(len(item[1]) - 5)]
                 if goodType not in data:
                     data[goodType] = []
                 data[goodType].append(item_float)
     return True
 
-file_reader(data_path)
+file_reader(data_path, 2014)
+data_path = "../../data/dce/2015/"
+file_reader(data_path, 2015)
+data_path = "../../data/dce/2016/"
+file_reader(data_path, 2016)
 
 def normalize(input_list):
     minN = 1e30
@@ -33,8 +42,6 @@ def normalize(input_list):
         minN = min(minN, float(i[2]))
         maxN = max(maxN, float(i[2]))
     return minN, maxN
-
-
 
 def plot_futures(begin, end, item_list):
     plot_dict = {}
@@ -69,8 +76,10 @@ def plot_futures(begin, end, item_list):
                 axis = datetime.datetime.strptime("20140101", '%Y%m%d')
                 x.append(date.__sub__(axis).days)
                 y.append((float(i[2]) - minN) / (maxN - minN))
-            plt.plot(x, y, label=name)
+            # plt.plot(x, y, label=name, linewidth=1)
+            plt.scatter(x, y, label=name, marker="+", s=15)
     plt.legend()
     plt.show()
 
-plot_futures(20140101,20150101, ["jm", "j", "i", "pp", "l", "v"])
+plot_futures(20140101, 20170101, ["y", "v"])
+# [j, jm, v, i], [l, pp], [c, cs], [v, y], [jd, m], [a], [b], [bb], [fb] ? [i, p]
