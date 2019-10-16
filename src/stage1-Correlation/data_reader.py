@@ -76,13 +76,13 @@ def plot_futures(begin, end, item_list):
                 axis = datetime.datetime.strptime("20140101", '%Y%m%d')
                 x.append(date.__sub__(axis).days)
                 y.append((float(i[2]) - minN) / (maxN - minN))
-            # plt.plot(x, y, label=name, linewidth=1)
-            plt.scatter(x, y, label=name, marker="+", s=15)
-            # fproceed = open("../../data/proceed/jm.txt", "w+")
+            plt.plot(x, y, label=name, linewidth=1)
+            # plt.scatter(x, y, label=name, marker="+", s=15)
+            # fproceed = open("../../data/proceed/pp.txt", "w+")
             # for i in range(len(x)):
             #     fproceed.write("%d, %f\n" % (x[i], y[i]))
     plt.legend()
     plt.show()
 
-plot_futures(20140101, 20170101, ["jm"])
+plot_futures(20140101, 20170101, ["pp"])
 # [j, jm, v, i], [l, pp], [c, cs], [v, y], [jd, m], [a], [b], [bb], [fb] ? [i, p]

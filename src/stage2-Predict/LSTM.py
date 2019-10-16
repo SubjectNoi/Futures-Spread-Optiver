@@ -6,13 +6,13 @@ from pandas import DataFrame
 import matplotlib.pyplot as plt 
 import numpy as np 
 
-DATA_STEP = 10
+DATA_STEP = 5
 HIDDEN_CELL = 10
 LEARNING_RATE = 0.02
 MAX_ITER = 2000
 TRAIN_PERCENTAGE = 0.6
 
-df = pd.read_excel(r"../../data/proceed/i.xls")
+df = pd.read_excel(r"../../data/proceed/jm.xls")
 datas = df.values
 x = range(0, len(datas))
 # Normalize
@@ -76,6 +76,11 @@ for i in range(MAX_ITER):
     optimizer.step()
     if (i + 1) % 100 == 0:
         print("Epoch:{}, Loss:{:.5f}".format(i + 1, loss.item()))
+
+
+# df_test = pd.read_excel(r"../../data/proceed/pp_test.xls")
+# datas_test = df_test.values
+# data_testX, data_testY = create_dataset(datas_test, DATA_STEP)
 
 dataX1 = dataX.reshape(-1, 1, DATA_STEP)
 dataX2 = torch.from_numpy(dataX1)
