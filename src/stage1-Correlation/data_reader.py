@@ -84,5 +84,5 @@ def plot_futures(begin, end, item_list):
     plt.legend()
     plt.show()
 
-plot_futures(20140101, 20170101, ["pp"])
+plot_futures(20140101, 20170101, ["y", "v"])
 # [j, jm, v, i], [l, pp], [c, cs], [v, y], [jd, m], [a], [b], [bb], [fb] ? [i, p]

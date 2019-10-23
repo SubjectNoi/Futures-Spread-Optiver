@@ -9,7 +9,7 @@ import numpy as np
 DATA_STEP = 5
 HIDDEN_CELL = 10
 LEARNING_RATE = 0.02
-MAX_ITER = 2000
+MAX_ITER = 1000
 TRAIN_PERCENTAGE = 0.6
 
 df = pd.read_excel(r"../../data/proceed/jm.xls")
