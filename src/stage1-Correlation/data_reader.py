@@ -76,8 +76,8 @@ def plot_futures(begin, end, item_list):
                 axis = datetime.datetime.strptime("20140101", '%Y%m%d')
                 x.append(date.__sub__(axis).days)
                 y.append((float(i[2]) - minN) / (maxN - minN))
-            plt.plot(x, y, label=name, linewidth=1)
-            # plt.scatter(x, y, label=name, marker="+", s=15)
+            # plt.plot(x, y, label=name, linewidth=1)
+            plt.scatter(x, y, label=name, marker="+", s=15)
             # fproceed = open("../../data/proceed/pp.txt", "w+")
             # for i in range(len(x)):
             #     fproceed.write("%d, %f\n" % (x[i], y[i]))
@@ -121,12 +121,13 @@ def calcCorr(begin, end, item_list):
             valid_item = sorted_sub_item[-1]
             if int(valid_item[2]) >= begin and int(valid_item[2]) <= end:
                 y.append([valid_item[1], int(valid_item[2]), float(valid_item[8])])
-
+        minX, maxX = normalize(x)
+        minY, maxY = normalize(y)
         setA = [xx[1] for xx in x]
         setB = [yy[1] for yy in y]
         intersect = [zz for zz in setA if zz in setB]
-        calcListX = [xx for xx in x if xx[1] in intersect]
-        calcListY = [yy for yy in y if yy[1] in intersect]
+        calcListX = [[xx[0], xx[1], (float(xx[2]) - minX) / (maxX - minX)] for xx in x if xx[1] in intersect]
+        calcListY = [[yy[0], yy[1], (float(yy[2]) - minY) / (maxY - minY)] for yy in y if yy[1] in intersect]
         sumX, sumY, sumXY, sumX2, sumY2, N = 0.0, 0.0, 0.0, 0.0, 0.0, len(calcListX)
         for i in range(N):
             sumX += calcListX[i][2]
@@ -138,8 +139,8 @@ def calcCorr(begin, end, item_list):
         result = (sumXY - (sumX * sumY) / N) / (((sumX2 - (sumX ** 2 / N)) * (sumY2 - (sumY ** 2 / N))) ** 0.5) 
     return result
         
-res = calcCorr(20140101, 20170101, ["j", "jm", "v", "i"])
+res = calcCorr(20140101, 20170101, ["c", "cs"])
 print(res)
-plot_futures(20140101, 20170101, ["j", "jm", "v", "i"])
+plot_futures(20140101, 20170101, ["c", "cs"])
 
 # [j, jm, v, i], [l, pp], [c, cs], [v, y], [jd, m], [a], [b], [bb], [fb] ? [i, p]
