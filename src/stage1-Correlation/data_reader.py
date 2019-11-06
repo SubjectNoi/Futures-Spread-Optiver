@@ -63,7 +63,7 @@ def plot_futures(begin, end, item_list):
     
         plot_dict[keys] = tmp_plot_items
 
-    plt.title("2014")
+    plt.title("2014-2017")
     for keys in plot_dict:
         x = []
         y = []
@@ -76,8 +76,8 @@ def plot_futures(begin, end, item_list):
                 axis = datetime.datetime.strptime("20140101", '%Y%m%d')
                 x.append(date.__sub__(axis).days)
                 y.append((float(i[2]) - minN) / (maxN - minN))
-            # plt.plot(x, y, label=name, linewidth=1)
-            plt.scatter(x, y, label=name, marker="+", s=15)
+            plt.plot(x, y, label=name, linewidth=1)
+            # plt.scatter(x, y, label=name, marker="+", s=15)
             # fproceed = open("../../data/proceed/pp.txt", "w+")
             # for i in range(len(x)):
             #     fproceed.write("%d, %f\n" % (x[i], y[i]))
@@ -91,7 +91,7 @@ def calcCorr(begin, end, item_list):
             result = 1
             for i in range(len(item_list)):
                 for j in range(i + 1, len(item_list)):
-                    print(item_list[i], item_list[j], calcCorr(begin, end, [item_list[i], item_list[j]]))
+                    # print(item_list[i], item_list[j], calcCorr(begin, end, [item_list[i], item_list[j]]))
                     result *= abs(calcCorr(begin, end, [item_list[i], item_list[j]]))
     else:
         x = []
@@ -139,8 +139,17 @@ def calcCorr(begin, end, item_list):
         result = (sumXY - (sumX * sumY) / N) / (((sumX2 - (sumX ** 2 / N)) * (sumY2 - (sumY ** 2 / N))) ** 0.5) 
     return result
         
-res = calcCorr(20140101, 20170101, ["c", "cs"])
-print(res)
-plot_futures(20140101, 20170101, ["c", "cs"])
-
+# res = calcCorr(20140101, 20170101, ["c", "cs"])
+# print(res)
+plot_futures(20140101, 20170101, ['y', 'p'])
+# item_list = ["j", "jm", "v", "i", "l", "pp", "c", "cs", "y", "jd", "m", "a", "b", "bb", "fb", "p"]
+# sort_list = []
+# for i in range(len(item_list)):
+#     for j in range(i + 1, len(item_list)):
+#         for k in range(j + 1, len(item_list)):
+#             for l in range(k + 1, len(item_list)):
+#                 sort_list.append([item_list[i], item_list[j], item_list[k], item_list[l], calcCorr(20140101, 20170101, [item_list[i], item_list[j], item_list[k], item_list[l]])])
+# sort_list = sorted(sort_list, key=lambda x: float(x[-1]))[::-1]
+# for i in range(30):
+#     print(sort_list[i])
 # [j, jm, v, i], [l, pp], [c, cs], [v, y], [jd, m], [a], [b], [bb], [fb] ? [i, p]
