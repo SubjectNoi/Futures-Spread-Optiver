@@ -4,7 +4,7 @@ import pandas as pd
 import math
 from pprint import pprint
 import matplotlib.pyplot as plt
-
+import statsmodels.tsa.stattools as st
 
 # 计算相关系数
 def computeCorrelation(X, Y):
@@ -129,4 +129,11 @@ def process_data():
 
 
 if __name__ == "__main__":
-    process_data()
+    # process_data()
+    df = get_shfe_dataframe()
+    xhc, xrb = get_item_prices(df, "hc"), get_item_prices(df, "rb")
+    print(st.adfuller(xhc))
+    print(st.adfuller(xrb)) # 单位根检验ADF
+
+    print(np.mat([xhc, xrb]).shape)
+    print(st.grangercausalitytests(np.mat([xhc, xrb]).T, maxlag=3)) # 格兰杰因果关系检验
