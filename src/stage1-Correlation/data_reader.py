@@ -141,7 +141,7 @@ def calcCorr(begin, end, item_list):
         
 # res = calcCorr(20140101, 20170101, ["c", "cs"])
 # print(res)
-plot_futures(20140101, 20170101, ['i', 'm'])
+plot_futures(20140101, 20170101, ['j', 'jm'])
 # item_list = ["j", "jm", "v", "i", "l", "pp", "c", "cs", "y", "jd", "m", "a", "b", "bb", "fb", "p"]
 # sort_list = []
 # for i in range(len(item_list)):
