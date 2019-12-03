@@ -130,17 +130,28 @@ def process_data():
 
 if __name__ == "__main__":
     # process_data()
-    df = get_shfe_dataframe()
+    df = get_shfe_dataframe(2015)
     xhc, xrb = get_item_prices(df, "hc"), get_item_prices(df, "rb")
+    Diff = (np.mat(xhc) - np.mat(xrb)).tolist()
+
+    df = get_shfe_dataframe(2016)
+    xhc, xrb = get_item_prices(df, "hc"), get_item_prices(df, "rb")
+    Diff[0] += (np.mat(xhc) - np.mat(xrb)).tolist()[0]
+
+    df = get_shfe_dataframe(2017)
+    xhc, xrb = get_item_prices(df, "hc"), get_item_prices(df, "rb")
+    Diff[0] += (np.mat(xhc) - np.mat(xrb)).tolist()[0]
+
+    df = get_shfe_dataframe(2018)
+    xhc, xrb = get_item_prices(df, "hc"), get_item_prices(df, "rb")
+    Diff[0] += (np.mat(xhc) - np.mat(xrb)).tolist()[0]
     # print(st.adfuller(xhc))
     # print(st.adfuller(xrb)) # 单位根检验ADF
 
     # print(np.mat([xhc, xrb]).shape)
     # print(st.grangercausalitytests(np.mat([xhc, xrb]).T, maxlag=3)) # 格兰杰因果关系检验
     f = open("diff.txt", "w+")
-    Diff = (np.mat(xhc) - np.mat(xrb)).tolist()
     maxN, minN = max(Diff[0]), min(Diff[0])
-    print(Diff[0])
     out = [(i - minN) / (maxN - minN) for i in Diff[0]]
     for i in out:
         f.write(str(i) + "\n")

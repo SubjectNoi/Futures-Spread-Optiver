@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-f = open("./hc.txt")
+f = open("./diff.txt")
 data = f.readlines()
 x1 = []
 origin = []
