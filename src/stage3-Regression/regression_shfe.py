@@ -29,37 +29,42 @@ def main():
     founding = start_founding
     future_cnt = 0
     fee = 0
+    deposit = 0
     for i in range(spread_valid.shape[0]):
         wb = sp_mean - 2 * sp_std
         ub = sp_mean + 2 * sp_std
         if (spread_valid[i] < wb or spread_valid[i] > ub):
-            if (spread_valid[i] < wb and future_cnt == 0):
+            if (spread_valid[i] < wb):
                 # 如果价差过低，买入rb, 卖出hc(founding - rb + hc)
-                # p_cnt = founding / abs(spread[i]) // 2
                 # print("cur valid", spread_valid[i])
-                p_cnt = start_founding * 0.3 / abs(spread_valid[i])
+                p_cnt = abs(founding) * 0.3 / (rb_valid[i] + hc_valid[i])
                 founding -= spread_valid[i] * p_cnt
                 founding -= (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004 #手续费
                 fee += (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004 #手续费
+                deposit += (rb_valid[i] + hc_valid[i]) * p_cnt * 0.08
+                founding -= (rb_valid[i] + hc_valid[i]) * p_cnt * 0.08
                 future_cnt += p_cnt
-            if (spread_valid[i] > ub and future_cnt == 0):
+            if (spread_valid[i] > ub):
                 # 如果价差过高，买入hc, 卖出rb(founding + rb - hc)
-                # p_cnt = future_cnt // 2
                 # print("cur valid", spread_valid[i])
-                p_cnt = start_founding * 0.3 / abs(spread_valid[i])
+                p_cnt = abs(founding) * 0.3 / (rb_valid[i] + hc_valid[i])
                 founding += spread_valid[i] * p_cnt
                 founding -= (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004 #手续费
                 fee += (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004  # 手续费
+                deposit += (rb_valid[i] + hc_valid[i]) * p_cnt * 0.08
+                founding -= (rb_valid[i] + hc_valid[i]) * p_cnt * 0.08
                 future_cnt -= p_cnt
         else:
             #如果回到正常区间，买入所有空头(卖出hc, 买入hb, founding + rb - hc)，卖出所有多头
             # print("cur valid", spread_valid[i])
             if future_cnt > 0:
                 founding += spread_valid[i] * future_cnt
+                founding += deposit
                 founding -= (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004 #手续费
                 fee += (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004  # 手续费
             elif future_cnt < 0:
                 founding -= spread_valid[i] * abs(future_cnt)
+                founding += deposit
                 founding -= (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004  # 手续费
                 fee += (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004  # 手续费
             future_cnt = 0
