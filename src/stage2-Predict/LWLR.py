@@ -14,7 +14,7 @@ def loadData(filename):
         xArr.append(lineArr)
         yArr.append(float(curLine[-1]))
         cnt += 1
-        # if cnt == 300:
+        # if cnt == 200:
         #     break
     return xArr, yArr
 
@@ -40,9 +40,15 @@ def lwlrTest(testArr, xArr, yArr, k=1.0):
         yHat[i] = lwlr(testArr[i], xArr, yArr, k)
     return yHat
 
-xArr, yArr = loadData("../../data/proceed/jm.txt")
+# xArr, yArr = loadData("../../data/proceed/jm.txt")
+xArr, yArr = loadData("../stage1-Correlation/diff-lwlr.txt")
 
-yHat = lwlrTest(xArr, xArr, yArr, 0.05)
+k = 2
+yHat = lwlrTest(xArr, xArr, yArr, k / 100.0)
+fin = open("../../data/proceed/diff-%d.txt" % (k), "w+")
+for i in range(len(yHat)):
+    fin.write(str(i) + "," + str(yHat[i]) + "," + str(yHat[i] - yArr[i]) + "\n")
+fin.close()
 xPlotArr = [x[0] for x in xArr]
 plt.title("Predict")
 plt.scatter(xPlotArr, yArr, s=15, marker="+")

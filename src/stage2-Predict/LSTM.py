@@ -6,11 +6,11 @@ from pandas import DataFrame
 import matplotlib.pyplot as plt 
 import numpy as np 
 
-DATA_STEP = 5
-HIDDEN_CELL = 10
+DATA_STEP = 60
+HIDDEN_CELL = 120
 LEARNING_RATE = 0.02
-MAX_ITER = 300
-TRAIN_PERCENTAGE = 0.6
+MAX_ITER = 500
+TRAIN_PERCENTAGE = 0.5
 
 df = pd.read_excel(r"../../data/proceed/diff.xls")
 datas = df.values
@@ -81,8 +81,15 @@ dataX1 = dataX.reshape(-1, 1, DATA_STEP)
 dataX2 = torch.from_numpy(dataX1)
 var_dataX = Variable(dataX2).type(torch.FloatTensor).cuda()
 pred = rnn(var_dataX).cuda()
+print(min_value, max_value)
 pred_test = pred.cpu().view(-1).data.numpy()
-
+pred_test = pred_test * (max_value - min_value) + min_value
+dataY = dataY * (max_value - min_value) + min_value
+print(pred_test)
+f = open("diff-pred.txt", "w+")
+for i in pred_test:
+    f.write(str(i) + "\n")
+f.close()
 plt.plot(pred_test, 'r', label='prediction')
 plt.plot(dataY, 'b', label='real')
 plt.plot(axisX, axisY, 'g')
