@@ -12,12 +12,12 @@ def do_policy(context, lower_bound, upper_bound):
         print("i = {}, spread = {}".format(i, spread))
         if (spread < lower_bound):
             # 如果价差过低，买入rb, 卖出hc
-            lot = math.floor(abs(context.founding) * 0.3 / (price_rb + price_hc))
+            lot = math.floor(abs(context.cash) * 0.3 / (price_rb + price_hc))
             context.buy_open(0, lot)
             context.sell_open(1, lot)
         elif (spread > upper_bound):
             # 如果价差过低，买入rb, 卖出hc
-            lot = math.floor(abs(context.founding) * 0.3 / (price_rb + price_hc))
+            lot = math.floor(abs(context.cash) * 0.3 / (price_rb + price_hc))
             context.buy_open(1, lot)
             context.sell_open(0, lot)
         else:
