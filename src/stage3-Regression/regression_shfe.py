@@ -20,8 +20,6 @@ def main():
     plt.xlabel("days")
     plt.ylabel("normed prices")
     x = list(range(rb_valid.shape[0]))
-    # plt.plot(x, rb, label="rb")
-    # plt.plot(x, hc, label="hc")
     plt.plot(x, spread_valid, label="spread")
     plt.plot(x, np.ones(len(x)) * sp_mean - 2 * sp_std, label="lw_bd")
     plt.plot(x, np.ones(len(x)) * sp_mean + 2 * sp_std, label="ub_bd")
@@ -33,6 +31,7 @@ def main():
     fee = 0
     deposit = 0
     sum_trade = 0
+    total_interest_list = []
     for i in range(spread_valid.shape[0]):
         wb = sp_mean - 2 * sp_std
         ub = sp_mean + 2 * sp_std
@@ -63,19 +62,29 @@ def main():
                 founding += spread_valid[i] * future_cnt
                 founding += deposit
                 deposit = 0
-                founding -= (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004 #手续费
-                fee += (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004  # 手续费
+                founding -= (rb_valid[i] + hc_valid[i]) * future_cnt * 0.00004 #手续费
+                fee += (rb_valid[i] + hc_valid[i]) * future_cnt * 0.00004  # 手续费
             elif future_cnt < 0:
                 founding -= spread_valid[i] * abs(future_cnt)
                 founding += deposit
                 deposit = 0
-                founding -= (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004  # 手续费
-                fee += (rb_valid[i] + hc_valid[i]) * p_cnt * 0.00004  # 手续费
+                founding -= (rb_valid[i] + hc_valid[i]) * future_cnt * 0.00004  # 手续费
+                fee += (rb_valid[i] + hc_valid[i]) * future_cnt * 0.00004  # 手续费
             future_cnt = 0
         print("i = {}, founding = {}, future_cnt = {}".format(i, founding, future_cnt))
+        total_interest_list.append((founding / start_founding) * 100 - 100)
     print("sum of fee = ", fee)
     print("interest ratio ", (founding / start_founding) * 100 - 100)
     print("sum of trade ", sum_trade)
+    plt.title("total interest")
+    plt.xlabel("days")
+    plt.ylabel("total interest till now")
+    x = list(range(rb_valid.shape[0]))
+    plt.plot(x, total_interest_list, label="line")
+    # plt.plot(x, np.ones(len(x)) * sp_mean - 2 * sp_std, label="lw_bd")
+    # plt.plot(x, np.ones(len(x)) * sp_mean + 2 * sp_std, label="ub_bd")
+    plt.legend()
+    plt.show()
 
 if __name__ == "__main__":
     main()
