@@ -1,5 +1,9 @@
-import h5py
+import os
 import math
+
+import h5py
+import numpy as np
+
 from src.utils.trading_framework import Context
 
 
@@ -32,17 +36,27 @@ def do_policy(context, lower_bound, upper_bound):
     context.stat()
 
 
-def main():
-    f = h5py.File("../../data/shfe/data.h5", "r")
+def data_loader(path):
+    date = []
+    with open(os.path.join(path, "date.txt"), "r") as f:
+        for line in f:
+            date.append(line[:-1])
+    f = h5py.File(os.path.join(path, "data.h5"), "r")
     rb = f["data"][0].flatten()
     hc = f["data"][1].flatten()
+    return date, rb, hc
+
+
+def main():
+    date, rb, hc = data_loader("../../data/shfe")
     spread = rb - hc
     train_len = int(len(spread) * 0.5)
     sp_mean = spread[:train_len].mean()
     sp_std = spread[:train_len].std()
     rb_valid = rb[train_len:]
     hc_valid = hc[train_len:]
-    context = Context(2000000, rb_valid, hc_valid)
+    date_valid = date[train_len:]
+    context = Context(2000000, rb_valid, hc_valid, date_valid)
     lower_bound = sp_mean - 2 * sp_std
     upper_bound = sp_mean + 2 * sp_std
     do_policy(context, lower_bound, upper_bound)

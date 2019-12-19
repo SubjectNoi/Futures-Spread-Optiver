@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 
 class Context(object):
-    def __init__(self, start_founding, prices_0, prices_1):
+    def __init__(self, start_founding, prices_0, prices_1, date):
         self.start_founding = start_founding
         # 维护可用现金量
         self.cash = self.start_founding
@@ -11,6 +11,8 @@ class Context(object):
         self.founding = start_founding
         assert len(prices_0) == len(prices_1)
         self.length = len(prices_0)
+        # 交易日期序列
+        self.date = date
         # 维护价格序列
         self.prices = [prices_0, prices_1]
         # 维护当前持仓量

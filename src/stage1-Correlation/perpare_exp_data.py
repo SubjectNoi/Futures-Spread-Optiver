@@ -76,7 +76,7 @@ def get_item_prices(dataframe, itemname):
         else:
             price_dict[item] = price
             capacity_dict[item] = capacity
-    return list(price_dict.values())
+    return list(price_dict.values()), list(price_dict.keys())
 
 
 def calc_person(prices_array, item_classes):
@@ -118,7 +118,7 @@ def process_data():
     # pprint(list(set(item_namelist)), indent=2)
     item_classes = list(set([item[0:2] for item in item_namelist]))
     # print(item_classes)
-    prices_list = [get_item_prices(dataframe, item_class) for item_class in item_classes]
+    prices_list, date_list = [get_item_prices(dataframe, item_class) for item_class in item_classes]
     prices_array = []
     counts = np.bincount([len(prices) for prices in prices_list])
     num = np.argmax(counts)
@@ -144,6 +144,7 @@ def process_data_combined():
     item_classes = sorted(list(name_list[0]))
     print(item_classes)
     prices_array = []
+    date_array = []
     begin = 2015
     for year in range(begin, 2019):
         dataframe = get_shfe_dataframe(year)
@@ -151,23 +152,28 @@ def process_data_combined():
         cols = dataframe.columns.tolist()
         item_namelist = dataframe[cols[0]].tolist()
         prices_list = [get_item_prices(dataframe, item_class) for item_class in item_classes]
-        for idx, prices in enumerate(prices_list):
+        for idx, item in enumerate(prices_list):
+            prices = item[0]
+            date = item[1]
             norm_prices = np.array((prices - np.mean(prices)) / np.std(prices))
             # not for norm
             if year == begin:
-                prices_array.append(prices)
+                prices_array.append(np.array(prices))
+                date_array.append(np.array(date))
             else:
                 prices_array[idx] = np.concatenate((prices_array[idx], prices))
-    # for idx in range(len(prices_array)):
-    #     prices = prices_array[idx]
-    #     prices_array[idx] = np.array((prices - np.mean(prices)) / np.std(prices))
+                date_array[idx] = np.concatenate((date_array[idx], date))
+    with open("../../data/shfe/date.txt", "w") as f:
+        for idx in range(date_array[0].shape[0]):
+            f.write(date_array[0][idx])
+            f.write("\n")
     f = h5py.File("../../data/shfe/data.h5", "w")
     # 1 for Rb, 5 for Hc
     output = np.concatenate((prices_array[7].reshape(1, -1), prices_array[5].reshape(1, -1)))
     print(output.shape)
     f.create_dataset("data", data=output)
     f.close()
-    calc_person(prices_array, item_classes)
+    # calc_person(prices_array, item_classes)
 
 
 if __name__ == "__main__":
