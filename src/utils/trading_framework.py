@@ -27,6 +27,7 @@ class Context(object):
         self.buy_deposit = 0
         self.total_interest_list = []
         self.idx = 0
+        self.trade_log = []
 
     def get_price(self, item_num, idx):
         price = self.prices[item_num][idx]
@@ -35,31 +36,6 @@ class Context(object):
     def get_current_price(self, item_num):
         price = self.prices[item_num][self.idx]
         return price
-
-    def sell_open(self, item_num, lot):
-        self.future_cnt[item_num] -= lot
-        price = self.prices[item_num][self.idx]
-        fee = price * lot * 0.00004
-        self.fee_sum += fee
-        self.cash -= fee
-        deposit = price * lot * 0.08
-        self.sell_deposit += deposit
-        self.cash -= deposit
-        self.trade_cnt += lot
-        self.trade_frequency += 1
-
-    def sell_close(self, item_num):
-        price = self.prices[item_num][self.idx]
-        if self.future_cnt[item_num] < 0:
-            lot = abs(self.future_cnt[item_num])
-            self.future_cnt[item_num] = 0
-            self.cash += self.sell_deposit * (1/0.08 + 1)
-            self.cash -= price * lot
-            fee = price * lot * 0.00004
-            self.fee_sum += fee
-            self.cash -= fee
-            self.sell_deposit = 0
-            self.trade_frequency += 1
 
     def buy_open(self, item_num, lot):
         self.future_cnt[item_num] += lot
@@ -72,6 +48,7 @@ class Context(object):
         self.cash -= deposit
         self.trade_cnt += lot
         self.trade_frequency += 1
+        self.trade_log.append([self.idx, item_num, price, lot, 0])
 
     def buy_close(self, item_num):
         price = self.prices[item_num][self.idx]
@@ -85,6 +62,34 @@ class Context(object):
             self.cash -= fee
             self.buy_deposit = 0
             self.trade_frequency += 1
+            self.trade_log.append([self.idx, item_num, price, lot, 1])
+
+    def sell_open(self, item_num, lot):
+        self.future_cnt[item_num] -= lot
+        price = self.prices[item_num][self.idx]
+        fee = price * lot * 0.00004
+        self.fee_sum += fee
+        self.cash -= fee
+        deposit = price * lot * 0.08
+        self.sell_deposit += deposit
+        self.cash -= deposit
+        self.trade_cnt += lot
+        self.trade_frequency += 1
+        self.trade_log.append([self.idx, item_num, price, lot, 1])
+
+    def sell_close(self, item_num):
+        price = self.prices[item_num][self.idx]
+        if self.future_cnt[item_num] < 0:
+            lot = abs(self.future_cnt[item_num])
+            self.future_cnt[item_num] = 0
+            self.cash += self.sell_deposit * (1/0.08 + 1)
+            self.cash -= price * lot
+            fee = price * lot * 0.00004
+            self.fee_sum += fee
+            self.cash -= fee
+            self.sell_deposit = 0
+            self.trade_frequency += 1
+            self.trade_log.append([self.idx, item_num, price, lot, 0])
 
     def move_to_next(self):
         value0 = self.future_cnt[0] * self.prices[0][self.idx]
