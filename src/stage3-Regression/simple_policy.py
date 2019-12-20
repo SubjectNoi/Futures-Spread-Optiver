@@ -4,8 +4,10 @@ import math
 import h5py
 import numpy as np
 
-from src.utils.trading_framework import Context
-
+import sys
+sys.path.append('..')
+#from src.utils.trading_framework import Context
+from utils.trading_framework import Context
 
 def do_policy(context, lower_bound, upper_bound):
     print("range: [{}, {}]".format(lower_bound, upper_bound))
@@ -46,6 +48,7 @@ def data_loader(path):
     hc = f["data"][1].flatten()
     return date, rb, hc
 
+trade_file = 'out/trade_file.txt'
 
 def main():
     date, rb, hc = data_loader("../../data/shfe")
@@ -61,6 +64,21 @@ def main():
     upper_bound = sp_mean + 2 * sp_std
     do_policy(context, lower_bound, upper_bound)
 
+    #write return and performance
+    f = open(trade_file, 'w+')
+
+
+    context.split_trade()
+    r_0, r_1 = context.cal_return()
+    context.annulized_return()
+    print('-----annulized return -----')
+    for i in range(len(context.a_return)):
+        print(context.a_return[i], end = '\n')
+    context.sharpe_ratio()
+    sharpe_r = context.sharpe_ratio()
+    print('-----sharpe ratio-----')
+    print(sharpe_r)
+    
 
 if __name__ =='__main__':
     main()

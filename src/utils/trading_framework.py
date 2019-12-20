@@ -29,7 +29,21 @@ class Context(object):
         self.buy_deposit = 0
         self.total_interest_list = []
         self.idx = 0
-        self.trade_log = []
+        #log trade for calculate
+        self.trade_log_open = []
+        self.trade_log_close = []
+        self.trade0_open = []
+        self.trade0_close = []
+        self.trade1_open = []
+        self.trade1_close = []
+        #single order return
+        self.return_0 = []
+        self.return_1 = []
+        #single array for cal
+        self.return0 = []
+        self.return1 = []
+        #annulized return
+        self.a_return =[]
 
     def get_price(self, item_num, idx):
         price = self.prices[item_num][idx]
@@ -50,7 +64,7 @@ class Context(object):
         self.cash -= deposit
         self.trade_cnt += lot
         self.trade_frequency += 1
-        self.trade_log.append([self.idx, item_num, price, lot, 0])
+        self.trade_log_open.append([self.idx, item_num, price, lot, 0])
 
     def buy_close(self, item_num):
         price = self.prices[item_num][self.idx]
@@ -64,7 +78,7 @@ class Context(object):
             self.cash -= fee
             self.buy_deposit = 0
             self.trade_frequency += 1
-            self.trade_log.append([self.idx, item_num, price, lot, 1])
+            self.trade_log_close.append([self.idx, item_num, price, lot, 1])
 
     def sell_open(self, item_num, lot):
         self.future_cnt[item_num] -= lot
@@ -77,7 +91,7 @@ class Context(object):
         self.cash -= deposit
         self.trade_cnt += lot
         self.trade_frequency += 1
-        self.trade_log.append([self.idx, item_num, price, lot, 1])
+        self.trade_log_open.append([self.idx, item_num, price, lot, 1])
 
     def sell_close(self, item_num):
         price = self.prices[item_num][self.idx]
@@ -91,7 +105,7 @@ class Context(object):
             self.cash -= fee
             self.sell_deposit = 0
             self.trade_frequency += 1
-            self.trade_log.append([self.idx, item_num, price, lot, 0])
+            self.trade_log_close.append([self.idx, item_num, price, lot, 0])
 
     def move_to_next(self):
         value0 = self.future_cnt[0] * self.prices[0][self.idx]
@@ -115,6 +129,76 @@ class Context(object):
         plt.plot(x, self.total_interest_list, label="line")
         plt.legend()
         plt.show()
+    
+    def split_trade(self):
+        for i in range(len(self.trade_log_open)):
+            if self.trade_log_open[i][1] is 0:
+                self.trade0_open.append(self.trade_log_open[i])
+            else:
+                self.trade1_open.append(self.trade_log_open[i])
+        for i in range(len(self.trade_log_close)):
+            if self.trade_log_close[i][1] is 0:
+                self.trade0_close.append(self.trade_log_close[i])
+            else:
+                self.trade1_close.append(self.trade_log_close[i])
+
+
+    def cal_return(self):
+        day = 0
+        j = 0
+        for i in range(len(self.trade0_close)):
+            while day < self.trade0_close[i][0]:
+                #if at the day time, there is open trade
+                if day is self.trade0_open[j][0]:
+                    #which buy and which sell
+                    #if buy 0
+                    if self.trade0_open[j][4] is 0:
+                        # 0 return
+                        r = (self.trade0_close[i][2] - self.trade0_open[j][2]) / self.trade0_open[j][2]
+                        self.return_0.append([self.trade0_open[j][0], self.trade0_open[j][3], r, \
+                                self.trade0_close[i][0] - self.trade0_open[j][0]])
+                        self.return0.append(r)
+                        # 1 return
+                        r = (self.trade1_open[j][2] - self.trade0_close[i][2]) / self.trade0_open[j][2]
+                        self.return_1.append([self.trade1_open[j][0], self.trade1_open[j][3], r, \
+                                self.trade1_close[i][0] - self.trade1_open[j][0]])
+                        self.return1.append(r)
+                    #if buy 1 sell 0
+                    else:
+                        # 0 return
+                        r = (self.trade0_open[j][2] - self.trade0_close[i][2]) / self.trade0_open[j][2]
+                        self.return_0.append([self.trade0_open[j][0], self.trade0_open[j][3], r, \
+                                self.trade0_close[i][0] - self.trade0_open[j][0]])
+                        self.return0.append(r)
+                        # 1 return
+                        r = (self.trade1_close[i][2] - self.trade0_open[j][2]) / self.trade0_open[j][2]
+                        self.return_1.append([self.trade1_open[j][0], self.trade1_open[j][3], r, \
+                                self.trade1_close[i][0] - self.trade1_open[j][0]])
+                        self.return1.append(r)
+                    j = j + 1
+                    day = day + 1
+                else:
+                    day = day + 1
+        return self.return0, self.return1
+
+    def annulized_return(self):
+        for i in range(len(self.return_0)):
+            self.a_return.append(self.return_0[i][2] * (250/self.return_0[i][3]))
+            self.a_return.append(self.return_1[i][2] * (250/self.return_1[i][3]))
+
+
+    def sharpe_ratio(self):
+        r = np.array(self.a_return)
+        r_m = np.mean(r)
+        r_std = np.std(r)
+        sharpe_r = r_m/r_std
+        return sharpe_r
+
+
+
+
+
+
 
 
 
