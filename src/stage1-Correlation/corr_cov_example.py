@@ -76,13 +76,37 @@ if __name__=="__main__":
     # example end
 
 
-    goods_list=["y","v","j", "jm", "i"]
+    goods_list=["a","b","bb","c","cs","fb","i","j","jd","jm","l","m","p","pp","v","y"]
     price=DataFrame({goods:get_goods_price(goods) for goods in goods_list})
     price_change=price.pct_change()
+
+    price_corr=price_change.corr()
+    price_cov=price_change.cov()
     print("corr matrix:\n")
-    print(price_change.corr())
+    print(price_corr)
     print("cov matrix:\n")
-    print(price_change.cov())
+    print(price_cov)
+
+    price_pair_corr={}
+
+    for k1 in price_corr:
+        ignore=True
+        for k2 in price_corr[k1].index:
+            if k2==k1:
+                ignore=False
+            else:
+                if not ignore:
+                    price_pair_corr[k1+" "+k2]=price_corr[k1][k2]
+
+    print(price_pair_corr)
+
+    price_pair_corr_ordered=sorted(price_pair_corr.items(),key=lambda x:x[1],reverse=False)
+
+    for item in price_pair_corr_ordered:
+        print(item)
+
+
+
 
 
 
