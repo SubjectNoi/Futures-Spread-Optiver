@@ -1,0 +1,17 @@
+<!doctype html>
+<title>optiver</title>
+<div>
+    <form action="/update_img" method="post">
+  <p>参数1: <input type="text" name="para1" /></p>
+  <p>参数2: <input type="text" name="para2" /></p>
+  <input type="submit" value="Submit" />
+</form>
+</div>
+
+<div>
+{% if img %}
+  <img src="{{ url_for('static', filename='image/') }}{{img}}"/>
+{% else %}
+  <img src="{{ url_for('static', filename='image/optiver.png') }}"/>
+{% endif %}
+</div>
