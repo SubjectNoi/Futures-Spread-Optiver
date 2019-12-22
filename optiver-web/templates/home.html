@@ -1,13 +1,40 @@
 <!doctype html>
 <title>optiver</title>
-<div>
-    <form action="/update_img" method="post">
-  <p>参数1: <input type="text" name="para1" /></p>
-  <p>参数2: <input type="text" name="para2" /></p>
-  <input type="submit" value="Submit" />
-</form>
-</div>
+<head>
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body style="padding:20px">
+<form action="/update_img" method="post">
+  <div class="form-group">
+    <label for="begin_date">开始日期</label>
+    <input type="text" class="form-control" id="begin_date" name="begin_date" value="{{begin_date}}" placeholder="">
+  </div>
+  <div class="form-group">
+    <label for="end_date">结束日期</label>
+    <input type="text" class="form-control" id="end_date" name="end_date" value="{{end_date}}" placeholder="">
+  </div>
+  <div class="form-group">
+    <label for="start_founding">投资金额</label>
+    <input type="text" class="form-control" id="start_founding" name="start_founding" value="{{start_founding}}" placeholder="">
+  </div>
+  <div class="form-group">
+    <label for="policy_idx">策略</label>
+    <input type="text" class="form-control" id="policy_idx" name="policy_idx" value="{{policy_idx}}" placeholder="">
+  </div>
+  <div class="form-group">
+    <label for="bulin_coeff">布林带宽度</label>
+    <input type="text" class="form-control" id="bulin_coeff" name="bulin_coeff" value="{{bulin_coeff}}" placeholder="">
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+<center>
 <div>
 {% if img %}
   <img src="{{ url_for('static', filename='image/') }}{{img}}"/>
@@ -15,3 +42,5 @@
   <img src="{{ url_for('static', filename='image/optiver.png') }}"/>
 {% endif %}
 </div>
+</center>>
+</body>

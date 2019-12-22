@@ -10,7 +10,7 @@ sys.path.append('..')
 from utils.trading_framework import Context
 
 
-def do_policy(context, rb, hc, train_ratio, bulin_coeff):
+def do_policy(context, rb, hc, train_ratio, bulin_coeff,out_img_name):
     spread = rb - hc
     train_len = int(len(spread) * train_ratio)
     sp_mean = spread[:train_len].mean()
@@ -42,7 +42,7 @@ def do_policy(context, rb, hc, train_ratio, bulin_coeff):
                 context.buy_close(1)
                 context.sell_close(0)
         context.move_to_next()
-    context.stat()
+    context.stat(out_img_name)
     context.split_trade()
     r_0, r_1 = context.cal_return()
     context.annulized_return()
@@ -109,8 +109,12 @@ def upper_bound_func(data_list, target):
     return -1
 
 
-def experiment(begin_date, end_date, start_founding, policy_idx, bulin_coeff):
-    date, rb, hc = data_loader("../../data/shfe")
+def experiment(begin_date, end_date, start_founding, policy_idx, bulin_coeff,out_img_name):
+    abs_path = os.path.abspath(__file__)
+    data_dir=abs_path.split(os.path.sep)[0:-3]
+    data_dir.extend(["data","shfe"])
+    data_dir=os.path.sep.join(data_dir)
+    date, rb, hc = data_loader(data_dir)
     idx_begin = lower_bound_func(date, begin_date)
     idx_end = upper_bound_func(date, end_date)
     if idx_begin == -1:
@@ -123,7 +127,7 @@ def experiment(begin_date, end_date, start_founding, policy_idx, bulin_coeff):
     date_valid = date[idx_begin:idx_end]
     context = Context(start_founding, rb_valid, hc_valid, date_valid)
     if policy_idx == 0:
-        do_policy(context, rb, hc, 0.5, bulin_coeff)
+        do_policy(context, rb, hc, 0.5, bulin_coeff,out_img_name)
 
 
 if __name__ =='__main__':

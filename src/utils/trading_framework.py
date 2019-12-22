@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import os
 
 class Context(object):
     def __init__(self, start_founding, prices_0, prices_1, trade_date):
@@ -117,7 +117,7 @@ class Context(object):
         if (self.idx > self.length):
             raise Exception("run over length!")
 
-    def stat(self):
+    def stat(self, out_img_name):
         print("sum of fee = ", self.fee_sum)
         print("interest ratio ", (self.founding / self.start_founding) * 100 - 100)
         print("sum of trade ", self.trade_cnt)
@@ -128,7 +128,12 @@ class Context(object):
         x = list(range(self.length))
         plt.plot(x, self.total_interest_list, label="line")
         plt.legend()
-        plt.show()
+        # plt.show()
+        abs_path = os.path.abspath(__file__)
+        img_dir = abs_path.split(os.path.sep)[0:-3]
+        img_dir.extend(["optiver-web", "static","image",out_img_name])
+        img_dir = os.path.sep.join(img_dir)
+        plt.savefig(img_dir)
     
     def split_trade(self):
         for i in range(len(self.trade_log_open)):
