@@ -10,7 +10,7 @@ sys.path.append('..')
 from utils.trading_framework import Context
 
 
-def do_policy(context, rb, hc, train_ratio, bulin_coeff,out_img_name):
+def do_policy(context, rb, hc, train_ratio, bulin_coeff,out_img_name,out_img_name_1):
     spread = rb - hc
     train_len = int(len(spread) * train_ratio)
     sp_mean = spread[:train_len].mean()
@@ -42,7 +42,7 @@ def do_policy(context, rb, hc, train_ratio, bulin_coeff,out_img_name):
                 context.buy_close(1)
                 context.sell_close(0)
         context.move_to_next()
-    context.stat(out_img_name)
+    context.stat(out_img_name,out_img_name_1)
     context.split_trade()
     r_0, r_1 = context.cal_return()
     print(r_0, r_1)
@@ -110,7 +110,7 @@ def upper_bound_func(data_list, target):
     return -1
 
 
-def experiment(begin_date, end_date, start_founding, policy_idx, bulin_coeff,out_img_name):
+def experiment(begin_date, end_date, start_founding, policy_idx, bulin_coeff,out_img_name, out_img_name_1):
     abs_path = os.path.abspath(__file__)
     data_dir=abs_path.split(os.path.sep)[0:-3]
     data_dir.extend(["data","shfe"])
@@ -128,8 +128,8 @@ def experiment(begin_date, end_date, start_founding, policy_idx, bulin_coeff,out
     date_valid = date[idx_begin:idx_end]
     context = Context(start_founding, rb_valid, hc_valid, date_valid)
     if policy_idx == 0:
-        do_policy(context, rb, hc, 0.5, bulin_coeff,out_img_name)
+        do_policy(context, rb, hc, 0.5, bulin_coeff,out_img_name,out_img_name_1)
 
 
 if __name__ =='__main__':
-    experiment("20170105", "20181227", 2000000, 0, 2)
+    experiment("20170105", "20181227", 2000000, 0, 2,"0.png")

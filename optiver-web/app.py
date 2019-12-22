@@ -13,9 +13,9 @@ app = Flask(__name__)
 
 
 @app.route('/')
-@app.route('/<img>/<begin_date>/<end_date>/<start_founding>/<policy_idx>/<bulin_coeff>')
-def hello(img="optiver.png",begin_date="20170105",end_date="20181227",start_founding="2000000",policy_idx="0",bulin_coeff="2"):
-    return render_template('home.html', img=img, begin_date=begin_date,end_date=end_date,start_founding=start_founding, policy_idx=policy_idx,bulin_coeff=bulin_coeff)
+@app.route('/<img>/<img1>/<begin_date>/<end_date>/<start_founding>/<policy_idx>/<bulin_coeff>')
+def hello(img="optiver.png",img1=None, begin_date="20170105",end_date="20181227",start_founding="2000000",policy_idx="0",bulin_coeff="2"):
+    return render_template('home.html', img=img, img1=img1, begin_date=begin_date,end_date=end_date,start_founding=start_founding, policy_idx=policy_idx,bulin_coeff=bulin_coeff)
 
 def get_uniq_num():
     nowTime = datetime.datetime.now().strftime("%Y%m%d%H%M%S")  # 生成当前时间
@@ -34,9 +34,10 @@ def update_img():
     policy_idx = int(request.form['policy_idx'])
     bulin_coeff = float(request.form["bulin_coeff"])
     out_img_name="out_"+str(get_uniq_num())+".png"
-    experiment(begin_date, end_date, start_founding, policy_idx, bulin_coeff, out_img_name)
+    out_img_name_1 = "out_" + str(get_uniq_num()) + ".png"
+    experiment(begin_date, end_date, start_founding, policy_idx, bulin_coeff, out_img_name, out_img_name_1)
     # compute with params
-    return redirect("/"+"/".join([out_img_name,begin_date, end_date, str(start_founding), str(policy_idx), str(bulin_coeff)]))
+    return redirect("/"+"/".join([out_img_name,out_img_name_1,begin_date, end_date, str(start_founding), str(policy_idx), str(bulin_coeff)]))
 
 if __name__ == '__main__':
     app.run()

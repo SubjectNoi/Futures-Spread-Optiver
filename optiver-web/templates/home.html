@@ -36,10 +36,9 @@
 </form>
 <center>
 <div>
-{% if img %}
   <img src="{{ url_for('static', filename='image/') }}{{img}}"/>
-{% else %}
-  <img src="{{ url_for('static', filename='image/optiver.png') }}"/>
+{% if img1 %}
+  <img src="{{ url_for('static', filename='image/') }}{{img1}}"/>
 {% endif %}
 </div>
 </center>>

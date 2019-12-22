@@ -126,7 +126,7 @@ class Context(object):
         if (self.idx > self.length):
             raise Exception("run over length!")
 
-    def stat(self, out_img_name):
+    def stat(self, out_img_name,out_img_name_1):
         print("sum of fee = ", self.fee_sum)
         print("interest ratio ", (self.founding / self.start_founding) * 100 - 100)
         print("sum of trade ", self.trade_cnt)
@@ -150,6 +150,10 @@ class Context(object):
         plt.ylabel("total amount")
         plt.bar(x, self.total_amount_list, label="amount")
         plt.legend()
+        img_dir = abs_path.split(os.path.sep)[0:-3]
+        img_dir.extend(["optiver-web", "static", "image", out_img_name_1])
+        img_dir = os.path.sep.join(img_dir)
+        plt.savefig(img_dir)
         plt.show()
 
     
