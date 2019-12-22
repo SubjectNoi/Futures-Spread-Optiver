@@ -45,6 +45,7 @@ def do_policy(context, rb, hc, train_ratio, bulin_coeff):
     context.stat()
     context.split_trade()
     r_0, r_1 = context.cal_return()
+    print(r_0, r_1)
     context.annulized_return()
     print('-----annulized return -----')
     for i in range(len(context.a_return)):
