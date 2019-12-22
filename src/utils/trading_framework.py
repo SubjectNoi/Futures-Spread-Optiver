@@ -142,7 +142,6 @@ class Context(object):
             else:
                 self.trade1_close.append(self.trade_log_close[i])
 
-
     def cal_return(self):
         day = 0
         j = 0
@@ -186,18 +185,12 @@ class Context(object):
             self.a_return.append(self.return_0[i][2] * (250/self.return_0[i][3]))
             self.a_return.append(self.return_1[i][2] * (250/self.return_1[i][3]))
 
-
     def sharpe_ratio(self):
         r = np.array(self.a_return)
         r_m = np.mean(r)
         r_std = np.std(r)
-        sharpe_r = r_m/r_std
+        sharpe_r = r_m / r_std
         return sharpe_r
-
-
-
-
-
 
 
 
