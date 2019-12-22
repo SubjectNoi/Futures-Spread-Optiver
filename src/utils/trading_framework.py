@@ -146,7 +146,6 @@ class Context(object):
         plt.legend()
         plt.show()
 
-    
     def split_trade(self):
         for i in range(len(self.trade_log_open)):
             if self.trade_log_open[i][1] is 0:
@@ -208,6 +207,18 @@ class Context(object):
         r_std = np.std(r)
         sharpe_r = r_m / r_std
         return sharpe_r
+
+    def max_return(self):
+        length = len(self.total_interest_list)
+        top = self.total_interest_list[length - 1]
+        max_ret = 0
+        for idx in range(length):
+            cur = self.total_interest_list[idx]
+            if cur > top:
+                top = cur
+            else:
+                max_ret = max(max_ret, (top - cur) / top)
+        return max_ret * 100
 
 
 

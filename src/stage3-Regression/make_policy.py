@@ -45,15 +45,16 @@ def do_policy(context, rb, hc, train_ratio, bulin_coeff):
     context.stat()
     context.split_trade()
     r_0, r_1 = context.cal_return()
-    print(r_0, r_1)
     context.annulized_return()
-    print('-----annulized return -----')
-    for i in range(len(context.a_return)):
-        print(context.a_return[i], end='\n')
+    # print('-----annulized return -----')
+    # for i in range(len(context.a_return)):
+    #     print(context.a_return[i], end='\n')
     context.sharpe_ratio()
     sharpe_r = context.sharpe_ratio()
     print('-----sharpe ratio-----')
     print(sharpe_r)
+    print('-----max return------')
+    print(context.max_return())
 
 
 def bld_policy(context, lower_bound, upper_bound):
