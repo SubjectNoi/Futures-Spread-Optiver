@@ -28,6 +28,9 @@ class Context(object):
         # 记录买入保证金
         self.buy_deposit = 0
         self.total_interest_list = []
+        # 记录成交量
+        self.total_amount_list = []
+        self.today_amount = 0
         self.idx = 0
         #log trade for calculate
         self.trade_log_open = []
@@ -64,6 +67,7 @@ class Context(object):
         self.cash -= deposit
         self.trade_cnt += lot
         self.trade_frequency += 1
+        self.today_amount = lot
         self.trade_log_open.append([self.idx, item_num, price, lot, 0])
 
     def buy_close(self, item_num):
@@ -78,6 +82,7 @@ class Context(object):
             self.cash -= fee
             self.buy_deposit = 0
             self.trade_frequency += 1
+            self.today_amount = -lot
             self.trade_log_close.append([self.idx, item_num, price, lot, 1])
 
     def sell_open(self, item_num, lot):
@@ -91,6 +96,7 @@ class Context(object):
         self.cash -= deposit
         self.trade_cnt += lot
         self.trade_frequency += 1
+        self.today_amount = -lot
         self.trade_log_open.append([self.idx, item_num, price, lot, 1])
 
     def sell_close(self, item_num):
@@ -105,6 +111,7 @@ class Context(object):
             self.cash -= fee
             self.sell_deposit = 0
             self.trade_frequency += 1
+            self.today_amount = lot
             self.trade_log_close.append([self.idx, item_num, price, lot, 0])
 
     def move_to_next(self):
@@ -113,6 +120,8 @@ class Context(object):
         self.founding = self.cash + value0 + value1
         print("idx = {}, founding = {}, cash = {}, future_cnt = {}".format(self.idx, self.founding, self.cash, self.future_cnt))
         self.total_interest_list.append((self.founding / self.start_founding) * 100 - 100)
+        self.total_amount_list.append(self.today_amount)
+        self.today_amount = 0
         self.idx += 1
         if (self.idx > self.length):
             raise Exception("run over length!")
@@ -134,6 +143,15 @@ class Context(object):
         img_dir.extend(["optiver-web", "static","image",out_img_name])
         img_dir = os.path.sep.join(img_dir)
         plt.savefig(img_dir)
+        plt.show()
+
+        plt.title("total amount list")
+        plt.xlabel("days")
+        plt.ylabel("total amount")
+        plt.bar(x, self.total_amount_list, label="amount")
+        plt.legend()
+        plt.show()
+
     
     def split_trade(self):
         for i in range(len(self.trade_log_open)):
