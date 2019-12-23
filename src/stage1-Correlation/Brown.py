@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-f = open("./hc.txt")
+f = open("./diff.txt")
 data = f.readlines()
 x1 = []
 origin = []
@@ -53,9 +53,9 @@ for i in range(0, len(data), 5):
 plt.plot(x1, origin, label="Origin Data")
 # plt.plot(x1, diff1, label="First order variation - 1")
 # plt.plot(x1, diff2, label="Second order variation - 1")
-# plt.plot(x2, diff3, label="First order variation - 3")
-# plt.plot(x2, diff4, label="Second order variation - 3")
-# plt.plot(x3, diff5, label="First order variation - 5")
-# plt.plot(x3, diff6, label="Second order variation - 5")
+plt.plot(x2, diff3, label="First order variation - 3")
+plt.plot(x2, diff4, label="Second order variation - 3")
+plt.plot(x3, diff5, label="First order variation - 5")
+plt.plot(x3, diff6, label="Second order variation - 5")
 plt.legend()
 plt.show()

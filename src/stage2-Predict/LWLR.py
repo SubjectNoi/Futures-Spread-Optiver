@@ -1,6 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt 
-
+xhc = []
+xrb = []
 def loadData(filename):
     fdata = open(filename, "r")
     data = fdata.readlines()
@@ -12,7 +13,9 @@ def loadData(filename):
         curLine = item.split(",")
         lineArr.append(float(curLine[0]))
         xArr.append(lineArr)
-        yArr.append(float(curLine[-1]))
+        yArr.append(float(curLine[-3]))
+        xhc.append(float(curLine[-2]))
+        xrb.append(float(curLine[-1]))
         cnt += 1
         # if cnt == 200:
         #     break
@@ -45,10 +48,10 @@ xArr, yArr = loadData("../stage1-Correlation/diff-lwlr.txt")
 
 k = 2
 yHat = lwlrTest(xArr, xArr, yArr, k / 100.0)
-fin = open("../../data/proceed/diff-%d.txt" % (k), "w+")
-for i in range(len(yHat)):
-    fin.write(str(i) + "," + str(yHat[i]) + "," + str(yHat[i] - yArr[i]) + "\n")
-fin.close()
+# fin = open("../../data/proceed/diff-%d.txt" % (k), "w+")
+# for i in range(len(yHat)):
+#     fin.write(str(i) + "," + str(yHat[i]) + "," + str(yHat[i] - yArr[i]) + "," + str(xhc[i]) + "," + str(xrb[i]) + "\n")
+# fin.close()
 xPlotArr = [x[0] for x in xArr]
 plt.title("Predict")
 plt.scatter(xPlotArr, yArr, s=15, marker="+")

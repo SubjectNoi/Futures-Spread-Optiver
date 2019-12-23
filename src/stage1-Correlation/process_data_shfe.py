@@ -66,7 +66,7 @@ def get_item_prices(dataframe, itemname):
         if not future_name[0:2] == itemname:
             continue
         item = dataframe.iloc[idx, 1]
-        price = dataframe.iloc[idx, 8]
+        price = dataframe.iloc[idx, 4]
         capacity = dataframe.iloc[idx, -2]
         if item in capacity_dict:
             if capacity_dict[item] < capacity:

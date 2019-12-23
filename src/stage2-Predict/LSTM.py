@@ -10,7 +10,7 @@ DATA_STEP = 60
 HIDDEN_CELL = 120
 LEARNING_RATE = 0.02
 MAX_ITER = 500
-TRAIN_PERCENTAGE = 0.5
+TRAIN_PERCENTAGE = 0.4
 
 df = pd.read_excel(r"../../data/proceed/diff.xls")
 datas = df.values
@@ -36,7 +36,7 @@ dataX, dataY = create_dataset(datas, DATA_STEP)
 train_size = int(len(dataX) * TRAIN_PERCENTAGE)
 axisX = []
 axisY = []
-eps, step = 0.0, 1.0 / 100
+eps, step = -400, 800 / 100
 for i in range(100):
     axisX.append(float(train_size))
     axisY.append(eps)
